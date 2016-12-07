@@ -1,0 +1,148 @@
+Go At Weta Digital
+8 Dec 2016
+
+Justin Israel
+Pipeline Engineer, Weta Digital
+justinisrael@gmail.com
+[[http://justinfx.com][justinfx.com]]
+[[https://github.com/justinfx][github.com/justinfx]]
+
+* About Me (Justin Israel)
+
+Been in the Visual Effects industry since 2005
+
+- Stan Winston Digital, Sony Imageworks, SouthPark Studios, ...
+
+Most of my career spent writting Python, and dabbling in other languages.
+
+Joined Weta Digital in 2013 as a Pipeline Engineer
+
+First started writing Go in Aug 2011 when Go was R59
+
+- "RealTime" messaging server for HTTP clients
+- Intended to be commericial, but ended up not becoming a product and just open sourced ([[https://github.com/justinfx/realtime][github.com/justinfx/realtime]])
+
+First production Go code written at Weta Digital, in 2013
+
+* About Weta Digital
+
+Started over 20 years ago; One of the leading Visual Effects Studios in the world.
+
+1000+ employees, and probably 300-400 of the code in some capacity (rough guess)
+
+Multiple departments specifically focused on development in different domains
+
+Programming Languages
+
+- Python, Cython, C/C++, Java
+- Javascript, MEL (Autodesk Maya)
+- Go (yay!), Ruby, Erlang, Objective C
+- Perl (legacy)
+
+Massive amount of hardware resources, including render farm with 80k+ cpu cores, petabytes of storage, lots of filers.
+
+* About My Department (Production Engineering)
+
+From the job description:
+
+	Production Engineering designs, develops and maintains core pipeline applications and 
+	services used by departments throughout the company. Among them: Review and Dailies Pipeline,
+	Asset Tracking Services, Software Environment Management and the Rendering Pipeline.
+
+Focuses on Python, with an increased amount of C++ over last 1.5 years
+
+Types of software include:
+
+- Services - REST/http/tcp, App servers + db, caches; Python / Java [/ Go]
+- Command line tools; Python
+- Plugins and tools for 3rd party applications like Maya; Python / C++
+- GUIs, in Qt or Web based; Python / C++ / Javascript
+
+* Introducing Go to Weta
+
+Gave first “intro to Go” demo mid 2013, and another sometime early 2014. 
+Didn’t see others writing Go until mid 2014
+
+Response to introducing Go to team was enthusiastic... about the look of the language itself.
+But mixed about officially supporting a new language in the department.
+
+Aug 2013 - PreviewServ - First production Go code I committed (ever); New project
+
+Sept 2013 - Port of a Python command launcher; Runs in front of tasks on the render farm
+
+* Introducing Go to Weta
+
+.image previewserv_v1.png 
+
+* Introducing Go to Weta
+
+.image previewserv_v2.png 
+
+* Introducing Go to Weta
+
+cgo binding libraries to support PreviewServ
+
+- [[https://github.com/justinfx/opencolorigo][github.com/justinfx/opencolorigo]] (Dec 2013) - VFX Color Pipeline Management
+- [[https://github.com/justinfx/openimageigo][github.com/justinfx/openimageigo]] (Jan 2014) - VFX Image Processing
+
+Aug 2014 - First R&D collab with another team member; environment management / version dependency resolving
+
+Nov 2014 - [[https://github.com/justinfx/gofileseq][github.com/justinfx/gofileseq]] - lib for file sequence parsing and formatting
+
+Nov 2014 - Gave another talk to department; Go for Weta Pythonistas
+
+Sep 2015 - Gave talk to department - Fuzz Testing, For Python, C++ ... And Go
+
+2015 - First learned of two other team members having started writting services in Go
+
+* Introducing Go to Weta
+
+Feb 2016 - Another team member starts official development of porting environment management solution to Go, as a service
+
+March 2016 - A group of team members *asks me* to do a Go demo based on a list of topics they had prepared
+
+July 2016 - Went to Gophercon with another co-worker; Brought back tons of cool info for the team
+
+* Go at Weta
+
+April 2016 - Team member, originally not interested in learning Go, unveils port of a key Python service to Go, and donates it to rest of the team when they leave the company the following week.
+
+.image disappear.gif
+
+- Actually resulted in 3 more team members getting exposure to Go
+- Reviewing implementation, writing more tests, and fixing bugs
+- Doing performance comparisons against original Python service, resulting in ~10x increase in message throughput with a drop to zero in failed requests 
+
+* Summary of Go at Weta
+
+- ~5 internal demos/presentations given on Go
+- ~10 libraries; mix of client libs, bindings, and new projects
+- ~4 command line tools; includes code gen (for C++)
+- 4 services (3 active): distributed image processing, environment management, application command replication, custom file server
+- ~10 members of Production Engineering dept that have written Go code
+- 3-4 members that write Go code semi regularly
+- Slowly replacing choice of Python for services
+
+* Take Away?
+
+Giving talks to the department on Go, while interesting to them, didn't really seem to motivate usage.
+
+Writting projects in Go, and then getting a new employee to contribute started to work.
+
+Starting some R&D for the environment management system in Go, and then talking about it a whole lot, seemed to motivate the green light for a port from Python to Go. The employee doing this work was also new.
+
+A developer porting an important Python service to Go and then bailing... seems to motivate other developers to maintain it.
+
+* Take Away?
+
+Collectively, this increased the overall exposure to the Go language enough to make it a viable choice for future projects.
+
+Showing enthusiasm for the language, to your team, at keeps the topic fresh.
+
+Also, make new people write code in Go.
+
+* Weta is Hiring!
+
+.image Weta_digital.jpeg
+.caption [[https://www.wetafx.co.nz/jobs][wetafx.co.nz/jobs]]
+
