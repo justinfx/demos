@@ -9,3 +9,11 @@ Uses the Go present tool: https://godoc.org/golang.org/x/tools/present
 go get golang.org/x/tools/cmd/present
 present
 ```
+
+To see the demo with the available theme, use the forked present-plus tool insteda:
+https://github.com/davelaursen/present-plus
+
+```
+go get -u github.com/davelaursen/present-plus
+present-plus
+```
