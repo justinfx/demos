@@ -1,0 +1,7 @@
+{
+    "hide-last-slide": "true",
+    "slide-stylesheets": [
+        "//fonts.googleapis.com/css?family=Raleway:regular,semibold|Varela",
+        "slide.css"
+    ]
+}

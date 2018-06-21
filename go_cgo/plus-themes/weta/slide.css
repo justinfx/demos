@@ -1,0 +1,228 @@
+section {
+    background-color: #222;
+}
+
+body {
+	overflow-y: hidden;
+}
+
+a, a:visited { color: #80b3ff; }
+a:hover      { color: #3385ff; }
+
+.buttons {
+    /*Move the Run button higher up*/
+    top: -64px;
+}
+
+.slides > article {
+    font-family: Varela, 'Open Sans', 'Helvetica Nueue', Helvetica, Arial, sans-serif;
+    color: #fff;
+    background-color: black;
+    border: 1px solid #333;
+    line-height: 32px;
+
+    transition: transform .3s ease-out, opacity .3s ease-out;
+    -o-transition: -o-transform .3s ease-out, opacity .3s ease-out;
+    -moz-transition: -moz-transform .3s ease-out, opacity .3s ease-out;
+    -webkit-transition: -webkit-transform .3s ease-out, opacity .3s ease-out;
+}
+
+article {
+    background-image: url("logo.png");
+    background-position: right 10px bottom 10px;
+    background-repeat: no-repeat;
+    background-size: 4.4em;
+}
+
+article > .image {
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
+
+.slides.layout-widescreen > article:not(.nobackground):not(.biglogo), 
+.slides.layout-faux-widescreen > article:not(.nobackground):not(.biglogo) {
+     background-position: right 10px bottom 10px; 
+}
+
+article.past,
+article.next {
+    opacity: 0.25;
+}
+article.far-past,
+article.far-next {
+    opacity: 0.1;
+}
+
+h1, h2, h3, .presenter {
+    color: #2BAB6E;
+    /*font-family: Raleway, 'Open Sans', 'Helvetica Nueue', Helvetica, Arial, sans-serif;*/
+    letter-spacing: 0;
+    margin-bottom: 0.3em;
+}
+
+.presenter p,
+.presenter p.link {
+    color: #fff;
+    font-size: 0.9em;
+}
+
+article p {
+    margin-top: 10px;
+}
+
+article h3 {
+    color: #2BAB6E;
+    font-size: 1.4em;
+    padding: 0 0 .3em .1em;
+    border-bottom: 2px solid #2BAB6E;
+    line-height: 1em;
+}
+
+article.first-slide h3,
+article.last-slide h3 {
+    font-size: 1.5em;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+article.first-slide h3.date {
+    border-top: 3px solid #2BAB6E;
+    padding-top: 15px;
+    margin-top: 20px;
+}
+article.last-slide {
+    padding: 5em;
+}
+
+article ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+article li:before {
+    content: "• ";
+    font-family: FontAwesome;
+    color: #2BAB6E;
+    margin-right: 4px;
+}
+
+article li {
+    color: #D6D6D6;
+    padding-left: 1em; 
+    text-indent: -.7em;
+}
+
+div.code {
+    background-color: #232323;
+    border: 1px solid #999;
+    border-radius: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 6px;
+}
+div.code pre {
+    font-family: 'Ubuntu Monospaced', 'Droid Sans Mono', monospace;
+    line-height: 1.3em;
+    font-size: 0.65em;
+    color: #fff;
+}
+code {
+    color: #ab862b;
+    font-family: 'Ubuntu Monospaced', 'Droid Sans Mono', monospace;
+}
+
+div.output {
+    border: 2px solid #2BAB6E;
+    background-color: #111;
+    width: 750px;
+    height: 480px;
+    left: 25%;
+    top: 25%;
+}
+
+div.output pre {
+    font-size: 16px;
+}
+
+div.output .buttons {
+    position: absolute;
+    float: none;
+    top: auto;
+    right: 20px;
+    bottom: 15px;
+}
+
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    /*background: rgba(143, 141, 144, 0.8);*/
+    background: rgba(43, 171, 110, 1);
+    -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(43, 171, 110, 1);
+    -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-corner {
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+}
+
+@media print {
+  @page  
+  { 
+    size: auto;
+    margin: 0px;  
+  } 
+
+  body {
+    margin: 0px; 
+  }
+
+  section {
+    background-color: black;
+    box-sizing: border-box;
+  }
+
+  .slides > article {
+    border-width: 0;
+  }
+
+  article {
+    opacity: 1.0;
+    padding: 32px;
+    margin-left: 16px;
+    margin-right: 16px;
+    height: 710px; /* fudging the height to get the logo at the bottom */
+  }
+
+  article.far-past, article.past, article.next, article.far-next {
+    opacity: 1.0;
+  }
+
+  h1, h2, h3, .presenter {
+      margin-bottom: 0.5em;
+  }
+
+  button {
+    visibility: hidden;
+  }
+}

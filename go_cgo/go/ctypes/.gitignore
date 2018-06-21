@@ -1,0 +1,4 @@
+lib*.h
+lib*.so
+lib*.a
+

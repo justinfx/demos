@@ -1,0 +1,350 @@
+#+theme=weta
+
+Go and cgo
+10 June 2018
+
+Justin Israel
+Weta Digital
+justinisrael@gmail.com
+
+
+
+* What is cgo?
+
+A bridge for Go code to call into C, and vice versa.
+
+# http://www.nonprofitwizards.com/wp-content/uploads/2016/03/Tightrope.jpg
+.image images/Tightrope.jpg
+.caption import "unsafe" ?
+
+* What is cgo?
+
+# https://elweb.co/the-security-footgun-in-etcd/
+.image images/backwards-pointing-gun.jpg
+.caption Remember OS threads, memory leaks, segmentation faults, double frees?
+
+
+
+* Why use cgo?
+
+Access platform calls that aren't directly exposed in Go stdlib:
+	
+	#include <CoreGraphics/CoreGraphics.h>    // OSX
+
+Existing solutions are already in C/C++ and you want Go bindings:  
+Databases (i.e. Sqlite3), Image processing libs
+
+Call into other languages through a C interface (like Python).
+
+	#include <Python.h>
+
+Write a library to be linked into C/C++ programs.
+
+	$ gcc -o main main.c -lmyGoLibrary
+
+Write a Python extension module.
+
+	>>> import myGoLibrary
+
+
+
+* Why *not* to use cgo?
+
+# https://www.istockphoto.com/photos/square-peg-in-a-round-hole
+# https://i.ytimg.com/vi/JPD9C0cL3Xc/maxresdefault.jpg
+# https://www.reddit.com/r/baseball/comments/ywlwx/we_jokingly_asked_for_obstructed_view/
+# https://cdn-images-1.medium.com/max/1920/1*m7RRBvo-x5e3yLWAXigM5A.jpeg
+.image images/why_not_cgo.png 500 _
+
+
+
+* C types and memory management
+
+Stdlib Package
+	
+	/*
+	   <Multi-line inline C code here>
+	*/
+	// <Single-line inline C code here>
+	import "C"
+
+Basic types
+
+	C.char, C.int, C.short, C.long, C.float, C.double, ...
+	unsafe.Pointer  // void*
+
+Helper functions
+
+	func C.CString(string) *C.char
+	func C.CBytes([]byte) unsafe.Pointer
+	func C.GoString(*C.char) string
+	func C.GoStringN(*C.char, C.int) string
+	func C.GoBytes(unsafe.Pointer, C.int) []byte
+
+* C types and memory management
+
+Includes
+
+	// #include <stdlib.h>
+	import "C"
+
+	func C.malloc(C.size_t) unsafe.Pointer
+	func C.free(unsafe.Pointer)
+
+The Go runtime cannot see or garbage collect C memory
+	
+	// #include <stdlib.h>
+	import "C"
+	import "unsafe"
+
+		var cmsg *C.char = C.CString("hi")
+		
+		// Don't forget this!
+		defer C.free(unsafe.Pointer(cmsg))
+
+		C.doSomething(cmsg)
+
+
+
+* Calling to C
+
+* Calling to C
+
+Inline C code can be defined and called, from within a Go source file
+
+.play -edit go/sum/main.go
+
+* Calling to C
+
+C source files alongside Go files - compiled together
+
+.image images/sum2.png _ 900
+
+.play go/sum2/run.sh /START/,/END/
+
+* Calling to C
+
+.link https://github.com/wkschwartz/pigosat github.com/wkschwartz/pigosat
+
+.image images/pigosat.png _ 800
+.caption picosat C source is vendored
+
+.play go/pigosat_show_link.sh /START/,/END/
+
+* Calling to C - External linking
+
+* Calling to C - External linking
+
+.code go/snippets.txt /IMAGICK_1:START/,/IMAGICK_1:END/
+
+* Calling to C - External linking (cont.)
+
+.code go/snippets.txt /IMAGICK_2:START/,/IMAGICK_2:END/
+
+.play go/imagick_show_build.sh /START/,/END/
+
+.play go/imagick_show_link.sh /START/,/END/
+
+
+
+* Calling into C++
+
+* Calling into C++
+
+A C++ library that we want to call:
+
+.code go/mathcpp/libmath/math.hh /namespace math/,/} // math/
+
+cgo can't directly call into C++ (namespaces, classes, ...)
+
+* Calling into C++
+
+Create a C shim API layer:
+
+.code go/mathcpp/math_shim.h /// math_shim.h/,/#endif // __cplusplus/
+
+* Calling into C++
+
+Translate from our C shim API, to C++ calls into library (math_shim.cpp):
+
+.code go/mathcpp/math_shim.cpp
+
+* Calling into C++
+
+Go code includes shim, and compile/link directives for external library
+
+.image images/mathcpp.go2.png _ 1000
+.caption Go  ->  C shim  ->  C++
+
+* Calling into C++
+
+Compiles and links against C++
+
+.code go/mathcpp/main.go /MAIN/,/MAIN/
+
+.play go/mathcpp/build.sh /START/,/END/
+
+.play go/mathcpp/run.sh /START/,/END/
+
+What could go wrong?
+
+.play go/mathcpp/crash.sh /START/,/END/
+
+
+
+* Compiling and Linking
+
+C library in non-standard locaton. Custom pkg-config location:
+
+	export PKG_CONFIG_PATH=/path/to/custom/ImageMagick/7.0.7-7/lib/pkgconfig
+
+C++ library in non-standard location. [[https://golang.org/cmd/cgo/#hdr-Using_cgo_with_the_go_command][Custom compiler and linker flags]]:
+
+	export CGO_CXXFLAGS="-I$HOME/src/OpenImageIO/dist_v1.6/macosx/include"
+	export CGO_LDFLAGS="-L$HOME/src/OpenImageIO/dist_v1.6/macosx/lib"
+
+Dynamic vs static linking
+
+- dynamic linking by default
+- static linking is possible
+
+
+
+* Calling into Go from C
+
+.link https://github.com/justinfx/openimageigo github.com/justinfx/openimageigo
+
+OpenImageIO has a read method that allows a callback for progress feedback
+
+.image images/oiio_cpp2.png
+.caption #include <OpenImageIO/imagebuf.h>
+
+We need to pass a function defined in Go, to this C++ function.
+
+* Calling into Go from C
+
+C shim layer defines the callback function type and delegates to a single callback
+function called "image_progress_callback". 
+
+.image images/oiio_cpp1.png _ 700
+
+But where does it come from?
+
+* Calling into Go from C
+
+.image images/oiio_go1.png _ 700
+
+The "//export <name>" directive tells cgo to do some extra work and export this
+function for access in C.
+
+.image images/oiio_cpp3.png _ 600
+.caption Magic!
+
+* Calling into Go from C
+
+.image images/oiio_go3.png _ 700
+.image images/oiio_go4.png _ 700
+
+* Calling into Go from C
+
+.image images/callbacks.png _ 800
+
+
+
+* Build modes 
+
+[[https://golang.org/cmd/go/#hdr-Build_modes][golang.org/cmd/go/#hdr-Build_modes]]
+
+The 'go build' and 'go install' commands take a -buildmode argument which indicates which kind of object file is to be built. 
+
+	...
+
+	-buildmode=c-archive
+		Build the listed main package, plus all packages it imports,
+		into a C archive file. The only callable symbols will be those
+		functions exported using a cgo //export comment. Requires
+		exactly one main package to be listed.
+
+	-buildmode=c-shared
+		Build the listed main package, plus all packages it imports,
+		into a C shared library. The only callable symbols will
+		be those functions exported using a cgo //export comment.
+		Requires exactly one main package to be listed.
+
+* Build modes
+
+[[https://github.com/justinfx/gofileseq/tree/master/exp/cpp][github.com/justinfx/gofileseq/exp/cpp]]
+
+	go build -buildmode=c-shared -o libgofileseq.so ./export
+	go build -buildmode=c-archive -o libgofileseq.a ./export
+
+	/install/path
+	├── include
+	│   └── fileseq
+	│       ├── fileseq.h
+	│       ├── frameset.h
+	│       ├── sequence.h
+	│       └── types.h
+	└── lib
+	    ├── libfileseq.a
+	    ├── libfileseq.dylib
+	    ├── libgofileseq.a
+	    └── libgofileseq.so
+
+	otool -L build/test_fileseq
+	build/test_fileseq:
+		/Users/justin/src/go/src/github.com/justinfx/gofileseq/exp/cpp/build/libfileseq.dylib 
+		libgofileseq.so (compatibility version 0.0.0, current version 0.0.0)
+		/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1252.50.4)
+		/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 400.9.0)
+
+
+
+* Calling Go from Python
+
+.code go/ctypes/src/calc/calc.go
+
+.code go/ctypes/src/calc/export/libcalc.go
+
+* Calling Go from Python
+
+Build a C library which exports a function from our library
+
+.play go/ctypes/build.sh /START/,/END/
+
+Use Python 'ctypes' module to directly access the C shared library
+
+.play go/ctypes/calc.py /START/,/END/
+
+Package [[https://github.com/go-python/gopy][github.com/go-python/gopy]] can automatically handle 
+generating the Go wrapper and compiled python module, from "//export" functions.
+
+
+
+* Last Notes
+
+- Building cgo apps usually mean dynamic linking unless extra steps are taken
+- _Could_ make project non-go-gettable 
+- Cross-compiling to other platforms is difficult
+- Calling from Go to C incurs a small overhead
+- C calls consume an OS thread
+- Go enforces some rules about sharing Go pointers with C
+- Go profiling tools can't usually see across the cgo boundary
+
+
+
+* Happy Seg-Faulting!
+
+# https://edge.alluremedia.com.au/m/l/2017/09/Nukesds2.jpg
+.image images/Nuke.jpg _ 900
+
+
+
+* Links
+
+- [[https://golang.org/cmd/cgo/][golang.org/cmd/cgo]]
+- [[https://github.com/golang/go/wiki/cgo][github.com/golang/go/wiki/cgo]]
+- [[https://github.com/justinfx/gofileseq/tree/master/exp/cpp][github.com/justinfx/gofileseq/tree/master/exp/cpp]]
+- [[https://github.com/gographics/imagick][github.com/gographics/imagick]]
+- [[https://github.com/justinfx/openimageigo][github.com/justinfx/openimageigo]]
+- [[https://github.com/wkschwartz/pigosat][github.com/wkschwartz/pigosat]]
