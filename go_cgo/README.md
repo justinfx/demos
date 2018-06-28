@@ -3,6 +3,16 @@
 June Wellington Gopher Meetup
 https://www.meetup.com/wellington-golang/events/frlxtpyxjbcc/
 
+### Viewing online
+
+This demo can be dynamically viewed via:
+https://go-talks.appspot.com/github.com/justinfx/demos/go_cgo/go_cgo.slide#1
+
+Interactive building and running won't wory correctly, so if you want to play with 
+the demo, follow the following local details...
+
+### Viewing locally
+
 Uses the Go present tool: https://godoc.org/golang.org/x/tools/present
 
 ```
